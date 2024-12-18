@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %} Sales {% endblock title %}
+
+{% block content %}
+    
+    <div class="login auth-form-container">
+        <h1> Añadir venta </h1>
+        
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}"> {{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="input-group">
+                {{ form.name.label }}
+                {{ form.name }}
+            </div>
+            <div class="input-group">
+                {{ form.category.label }}
+                {{ form.category }}
+            </div>
+            <div class="input-group">
+                {{ form.quantity.label }}
+                {{ form.quantity }}
+            </div>
+            <div class="input-group">
+                {{ form.price.label }}
+                {{ form.price }}
+            </div>
+            <div class="input-group">
+                {{ form.date.label }}
+                {{ form.date }}
+            </div>
+            {{ form.submit }}
+        </form>
+    </div>
+
+
+{% endblock content %}
