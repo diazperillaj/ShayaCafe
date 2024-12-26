@@ -18,10 +18,14 @@ def create_app():
     login_manager.login_view = 'auth.login'
 
 
-    from .auth import auth
-    from .views import views
+    from app.views.farmers import farmers
+    from app.views.auth import auth
+    from app.views.index import index
+    from app.views.inventoryView import inventoryViews
 
-    app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(inventoryViews, url_prefix='/Inventory')
+    app.register_blueprint(farmers, url_prefix='/Farmers')
+    app.register_blueprint(index, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
     return app

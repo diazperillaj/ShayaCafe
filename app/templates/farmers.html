@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %} Inventory {% endblock title %}
+
+{% block content %}
+    
+    <div class="content">
+        <h1>Caficultores</h1>
+        <div class="selection-options">
+            <a href="{{ url_for('farmers.create_farmer') }}" class="add-inv-btn login-btn">Crear caficultor</a>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}"> {{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% if farmers %}
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Ubicacion</th>
+                            <th>Nombre Finca</th>
+                            <th>Telefono</th>
+                            <th>Observaciones</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for farmer in farmers %}
+                        <tr>
+                            <td>{{ farmer.name }}</td>
+                            <td>{{ farmer.location }}</td>
+                            <td>{{ farmer.farm_name }}</td>
+                            <td>{{ farmer.phone }}</td>
+                            <td>{{ farmer.observation }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('farmers.edit_farmer', farmer_id=farmer.id) }}">
+                                    <button type="submit" class="btn btn-primary">Editar</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ url_for('farmers.delete_farmer', farmer_id=farmer.id) }}" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                    {{ form.hidden_tag() }}
+                                    <button type="submit" class="btn btn-primary">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+
+{% endblock content %}

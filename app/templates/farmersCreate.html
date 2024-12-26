@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %} Sales {% endblock title %}
+
+{% block content %}
+
+    <div class="login auth-form-container">
+        <h1> Crear caficultor </h1>
+        
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}"> {{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="input-group">
+                {{ form.name.label }}
+                {{ form.name }}
+            </div>
+            <div class="input-group">
+                {{ form.location.label }}
+                {{ form.location }}
+            </div>
+            <div class="input-group">
+                {{ form.farm_name.label }}
+                {{ form.farm_name }}
+            </div>
+            <div class="input-group">
+                {{ form.phone.label }}
+                {{ form.phone }}
+            </div>
+            <div class="input-group">
+                {{ form.observation.label }}
+                {{ form.observation }}
+            </div>
+            {{ form.submit }}
+        </form>
+    </div>
+
+{% endblock content %}

@@ -12,6 +12,6 @@ class Config:
     PASSWORD = '@ShAyAcAfE0318@'
     PASSWORD = quote_plus(PASSWORD)
     HOST = 'localhost'
-    DB = 'shayaSalesDB'
+    DB = 'shayaDB'
     SQLALCHEMY_DATABASE_URI = f'mysql://{USERNAME}:{PASSWORD}@{HOST}/{DB}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
