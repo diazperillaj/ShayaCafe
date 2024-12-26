@@ -4,7 +4,7 @@ from app import db
 
 index = Blueprint('index', __name__)
 
-@index.route('/Home')
+@index.route('/home')
 @login_required
 def home():
     return render_template('index.html')

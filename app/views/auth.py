@@ -10,7 +10,7 @@ auth = Blueprint('auth', __name__)
 def load_user(user_id):
     return user_model.Users.query.get(int(user_id))
 
-@auth.route('/Login', methods=['GET'])
+@auth.route('/login', methods=['GET'])
 def login_page():
     return redirect(url_for('auth.login'))
 
@@ -36,7 +36,7 @@ def login():
             return render_template('loginForm.html', form=form) 
     return render_template('loginForm.html', form=form)
 
-@auth.route('/Logout')
+@auth.route('/logout')
 @login_required
 def logout():
     logout_user()

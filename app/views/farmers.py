@@ -11,7 +11,7 @@ def farmer():
     form = farmerForm()
     return render_template('farmers.html', farmers=farmers_list, form=form)
 
-@farmers.route('/Create', methods=['GET','POST'])
+@farmers.route('/create', methods=['GET','POST'])
 def create_farmer():
     form=farmerForm()
 
@@ -31,7 +31,7 @@ def create_farmer():
     return render_template('farmersCreate.html', form=form)
 
 
-@farmers.route('/Edit/<int:farmer_id>', methods=['POST'])
+@farmers.route('/edit/<int:farmer_id>', methods=['POST'])
 def edit_farmer(farmer_id: int):
 
     farmer = Farmers.query.get(farmer_id)
@@ -55,7 +55,7 @@ def edit_farmer(farmer_id: int):
 
     return render_template('farmersEdit.html', form=form)
 
-@farmers.route('/Delete/<int:farmer_id>', methods=['POST'])
+@farmers.route('/delete/<int:farmer_id>', methods=['POST'])
 def delete_farmer(farmer_id: int):
 
     farmer = Farmers.query.get(farmer_id)

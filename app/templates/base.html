@@ -17,7 +17,7 @@
             <div class="logo">Shaya Café</div>
             <nav>
                 <ul>
-                    <li><a href="#">Inventario</a></li>
+                    <li><a href="{{ url_for('inventoryViews.inventory') }}">Inventario</a></li>
                     <li><a href="#">Ventas</a></li>
                     <li><a href="{{ url_for('farmers.farmer') }}">Caficultores</a></li>
                     <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>

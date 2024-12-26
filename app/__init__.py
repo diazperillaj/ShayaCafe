@@ -23,8 +23,8 @@ def create_app():
     from app.views.index import index
     from app.views.inventoryView import inventoryViews
 
-    app.register_blueprint(inventoryViews, url_prefix='/Inventory')
-    app.register_blueprint(farmers, url_prefix='/Farmers')
+    app.register_blueprint(inventoryViews, url_prefix='/inventory')
+    app.register_blueprint(farmers, url_prefix='/farmers')
     app.register_blueprint(index, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
