@@ -7,9 +7,9 @@
     <div class="content">
         <h1> Inventario</h1>
         <div class="selection-options">
-            <a href="#" class="add-inv-btn login-btn">Pergamino seco</a>
-            <a href="#" class="add-inv-btn login-btn">Cafe procesado</a>
-            <a href="#" class="add-inv-btn login-btn">Otros</a>
+            <a href="{{ url_for('inventoryViews.inventory_create_dry_parchment_coffee') }}" class="add-inv-btn login-btn">Pergamino seco</a>
+            <a href="{{ url_for('inventoryViews.inventory_create_processed_coffee') }}" class="add-inv-btn login-btn">Cafe procesado</a>
+            <a href="{{ url_for('inventoryViews.inventory_create_others_in_inventory') }}" class="add-inv-btn login-btn">Otros</a>
         </div>
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}

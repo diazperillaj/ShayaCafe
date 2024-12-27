@@ -1,13 +1,14 @@
 from flask import Blueprint, render_template, url_for, redirect
 from app.forms.farmer import farmerForm
-from app.models.farmer import Farmers
+from app.models.farmer import Farmer
+from app.models.inventory import dryParchmentCoffee
 from app import db
 
 farmers = Blueprint('farmers', __name__)
 
 @farmers.route('/')
 def farmer():
-    farmers_list = Farmers.query.all()
+    farmers_list = Farmer.query.all()
     form = farmerForm()
     return render_template('farmers.html', farmers=farmers_list, form=form)
 
@@ -16,7 +17,7 @@ def create_farmer():
     form=farmerForm()
 
     if form.validate_on_submit():
-        farmer = Farmers(
+        farmer = Farmer(
             name = form.name.data.capitalize(),
             location = form.location.data.capitalize(),
             farm_name = form.farm_name.data.capitalize(),
@@ -34,7 +35,7 @@ def create_farmer():
 @farmers.route('/edit/<int:farmer_id>', methods=['POST'])
 def edit_farmer(farmer_id: int):
 
-    farmer = Farmers.query.get(farmer_id)
+    farmer = Farmer.query.get(farmer_id)
     if not farmer:
         return redirect(url_for('farmers.farmer'))
     
@@ -58,7 +59,7 @@ def edit_farmer(farmer_id: int):
 @farmers.route('/delete/<int:farmer_id>', methods=['POST'])
 def delete_farmer(farmer_id: int):
 
-    farmer = Farmers.query.get(farmer_id)
+    farmer = Farmer.query.get(farmer_id)
     if not farmer:
         return redirect(url_for('farmers.farmer'))
 
