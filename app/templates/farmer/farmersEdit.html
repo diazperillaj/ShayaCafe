@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "layout/base.html" %}
 
 {% block title %} Sales {% endblock title %}
 
 {% block content %}
 
     <div class="login auth-form-container">
-        <h1> Crear categoria </h1>
+        <h1> Editar caficultor </h1>
         
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -24,8 +24,20 @@
                 {{ form.name }}
             </div>
             <div class="input-group">
-                {{ form.description.label }}
-                {{ form.description }}
+                {{ form.location.label }}
+                {{ form.location }}
+            </div>
+            <div class="input-group">
+                {{ form.farm_name.label }}
+                {{ form.farm_name }}
+            </div>
+            <div class="input-group">
+                {{ form.phone.label }}
+                {{ form.phone }}
+            </div>
+            <div class="input-group">
+                {{ form.observation.label }}
+                {{ form.observation }}
             </div>
             {{ form.submit }}
         </form>

@@ -1,0 +1,42 @@
+{% extends "layout/base.html" %}
+
+{% block title %} Sales {% endblock title %}
+
+{% block content %}
+
+    <div class="login auth-form-container">
+        <h1> Agregar otros </h1>
+        
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}"> {{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            {{ inventoryForm.hidden_tag() }}
+            <div class="input-group">
+                {{ othersInInventoryForm.name.label }}
+                {{ othersInInventoryForm.name }}
+            </div>
+            <div class="input-group">
+                {{ inventoryForm.quantity.label }}
+                {{ inventoryForm.quantity }}
+            </div>
+            <div class="input-group">
+                {{ inventoryForm.entry_date.label }}
+                {{ inventoryForm.entry_date }}
+            </div>
+            <div class="input-group">
+                {{ inventoryForm.observation.label }}
+                {{ inventoryForm.observation }}
+            </div>
+            {{ inventoryForm.submit }}
+        </form>
+    </div>
+
+{% endblock content %}

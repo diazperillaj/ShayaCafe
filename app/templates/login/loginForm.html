@@ -1,11 +1,13 @@
-{% extends "base.html" %}
+{% extends "layout/base.html" %}
 
-{% block title %} Sales {% endblock title %}
+{% block title %} Test {% endblock title %}
 
 {% block content %}
 
+    {% block header %}{% endblock header %}
+
     <div class="login auth-form-container">
-        <h1> Crear caficultor </h1>
+        <h1> Login </h1>
         
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -20,24 +22,12 @@
         <form method="POST">
             {{ form.hidden_tag() }}
             <div class="input-group">
-                {{ form.name.label }}
-                {{ form.name }}
+                {{ form.username.label }}
+                {{ form.username }}
             </div>
             <div class="input-group">
-                {{ form.location.label }}
-                {{ form.location }}
-            </div>
-            <div class="input-group">
-                {{ form.farm_name.label }}
-                {{ form.farm_name }}
-            </div>
-            <div class="input-group">
-                {{ form.phone.label }}
-                {{ form.phone }}
-            </div>
-            <div class="input-group">
-                {{ form.observation.label }}
-                {{ form.observation }}
+                {{ form.password.label }}
+                {{ form.password }}
             </div>
             {{ form.submit }}
         </form>

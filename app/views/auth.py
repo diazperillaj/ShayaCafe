@@ -30,7 +30,7 @@ def login():
         else:
             flash('Error al inciar sesion, por favor valide sus credenciales', 'error')
             return render_template('loginForm.html', form=form) 
-    return render_template('loginForm.html', form=form)
+    return render_template('login/loginForm.html', form=form)
 
 @auth.route('/logout')
 @login_required

@@ -10,7 +10,7 @@ farmers = Blueprint('farmers', __name__)
 def farmer():
     farmers_list = Farmer.query.all()
     form = farmerForm()
-    return render_template('farmers.html', farmers=farmers_list, form=form)
+    return render_template('farmer/farmers.html', farmers=farmers_list, form=form)
 
 @farmers.route('/create', methods=['GET','POST'])
 def create_farmer():
@@ -29,7 +29,7 @@ def create_farmer():
 
         return redirect(url_for('farmers.farmer'))
 
-    return render_template('farmersCreate.html', form=form)
+    return render_template('farmer/farmersCreate.html', form=form)
 
 
 @farmers.route('/edit/<int:farmer_id>', methods=['POST'])
@@ -54,7 +54,7 @@ def edit_farmer(farmer_id: int):
     
     form.submit.label.text = 'Editar'
 
-    return render_template('farmersEdit.html', form=form)
+    return render_template('farmer/farmersEdit.html', form=form)
 
 @farmers.route('/delete/<int:farmer_id>', methods=['POST'])
 def delete_farmer(farmer_id: int):

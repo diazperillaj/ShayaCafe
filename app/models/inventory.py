@@ -98,10 +98,8 @@ class processedCoffee(db.Model):
     dry_parchment_coffee_id = db.Column(db.Integer, db.ForeignKey('dry_parchment_coffees.id', ondelete='SET DEFAULT'), nullable=False, default=0)
     weight = db.Column(db.Float, nullable=False)
     processed_category = db.Column(db.String(120), nullable=False)
-    processing_date = db.Column(db.DateTime, default=db.func.now(), nullable=False)
     responsible = db.Column(db.String(120), nullable=False)
-    observation = db.Column(db.Text, nullable=False, default="NA")
-
+    
     # Relation with dry_parchment_coffees (many to one)
     dry_parchment_coffee = relationship('dryParchmentCoffee', back_populates='processed_coffes')
 

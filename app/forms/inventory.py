@@ -4,8 +4,8 @@ from wtforms.validators import DataRequired
 import datetime
 
 class inventoryForm(FlaskForm):
-    product_id = IntegerField('Product ID',validators=[DataRequired()])
-    category_id = IntegerField('Category ID',validators=[DataRequired()])
+    product_id = IntegerField('Product ID')
+    category_id = IntegerField('Category ID')
     quantity = IntegerField('Cantidad',
                             validators=[DataRequired()])
     entry_date = DateTimeLocalField('Fecha ingreso',
@@ -43,10 +43,6 @@ class processedCoffeeForm(FlaskForm):
     weight = IntegerField('Tamaño individual',
                             validators=[DataRequired()])
     processed_category = StringField('Tipo molienda',
-                            validators=[DataRequired()])
-    processing_date = DateTimeLocalField('Fecha proceso',
-                            format='%Y-%m-%dT%H:%M',
-                            default=datetime.datetime.now(),
                             validators=[DataRequired()])
     responsible = StringField('Responsable',
                             validators=[DataRequired()])

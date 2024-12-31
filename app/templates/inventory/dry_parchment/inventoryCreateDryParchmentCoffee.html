@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "layout/base.html" %}
 
 {% block title %} Sales {% endblock title %}
 
 {% block content %}
 
     <div class="login auth-form-container">
-        <h1> Agregar otros </h1>
+        <h1> Agregar pergamino seco </h1>
         
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -20,8 +20,16 @@
         <form method="POST">
             {{ inventoryForm.hidden_tag() }}
             <div class="input-group">
-                {{ othersInInventoryForm.name.label }}
-                {{ othersInInventoryForm.name }}
+                {{ dryParchmentCoffeeForm.farmer_id.label }}
+                {{ dryParchmentCoffeeForm.farmer_id }}
+            </div>
+            <div class="input-group">
+                {{ dryParchmentCoffeeForm.variety.label }}
+                {{ dryParchmentCoffeeForm.variety }}
+            </div>
+            <div class="input-group">
+                {{ dryParchmentCoffeeForm.altitude.label }}
+                {{ dryParchmentCoffeeForm.altitude }}
             </div>
             <div class="input-group">
                 {{ inventoryForm.quantity.label }}
@@ -35,7 +43,7 @@
                 {{ inventoryForm.observation.label }}
                 {{ inventoryForm.observation }}
             </div>
-            {{ inventoryForm.submit }}
+            {{ dryParchmentCoffeeForm.submit }}
         </form>
     </div>
 

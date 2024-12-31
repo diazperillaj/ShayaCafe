@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "layout/base.html" %}
 
 {% block title %} Sales {% endblock title %}
 
 {% block content %}
 
     <div class="login auth-form-container">
-        <h1> Agregar cafe procesado </h1>
+        <h1> Editar otros </h1>
         
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -20,24 +20,8 @@
         <form method="POST">
             {{ inventoryForm.hidden_tag() }}
             <div class="input-group">
-                {{ processedCoffeeForm.dry_parchment_coffee_id.label }}
-                {{ processedCoffeeForm.dry_parchment_coffee_id }}
-            </div>
-            <div class="input-group">
-                {{ processedCoffeeForm.weight.label }}
-                {{ processedCoffeeForm.weight }}
-            </div>
-            <div class="input-group">
-                {{ processedCoffeeForm.processed_category.label }}
-                {{ processedCoffeeForm.processed_category  }}
-            </div>
-            <div class="input-group">
-                {{ processedCoffeeForm.processing_date.label }}
-                {{ processedCoffeeForm.processing_date  }}
-            </div>
-            <div class="input-group">
-                {{ processedCoffeeForm.responsible.label }}
-                {{ processedCoffeeForm.responsible  }}
+                {{ othersInInventoryForm.name.label }}
+                {{ othersInInventoryForm.name }}
             </div>
             <div class="input-group">
                 {{ inventoryForm.quantity.label }}

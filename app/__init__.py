@@ -21,7 +21,7 @@ def create_app():
     from app.views.farmers import farmers
     from app.views.auth import auth
     from app.views.index import index
-    from app.views.inventoryView import inventoryViews
+    from app.views.inventory import inventoryViews
 
     app.register_blueprint(inventoryViews, url_prefix='/inventory')
     app.register_blueprint(farmers, url_prefix='/farmers')
