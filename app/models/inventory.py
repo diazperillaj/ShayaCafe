@@ -67,6 +67,7 @@ class dryParchmentCoffee(db.Model):
     variety = db.Column(db.String(200), nullable=False)
     altitude =  db.Column(db.Float, nullable=False)
     processed = db.Column(db.Boolean, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     observation = db.Column(db.Text, nullable=False, default="NA")
 
     # Relation with farmers (many to one)
@@ -99,6 +100,8 @@ class processedCoffee(db.Model):
     weight = db.Column(db.Float, nullable=False)
     processed_category = db.Column(db.String(120), nullable=False)
     responsible = db.Column(db.String(120), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
     
     # Relation with dry_parchment_coffees (many to one)
     dry_parchment_coffee = relationship('dryParchmentCoffee', back_populates='processed_coffes')
@@ -114,4 +117,5 @@ class othersInInventory(db.Model):
     __tablename__ = 'others_in_inventories'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
+    price = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=False, default="NA")

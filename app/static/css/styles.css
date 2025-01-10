@@ -155,7 +155,7 @@ header nav ul li a:hover {
     color: #488b30;
 }
 
-.content {
+section {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -168,6 +168,26 @@ header nav ul li a:hover {
     font-family: sans-serif, Roboto;
     box-sizing: border-box;
 }
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    margin: 30px auto;
+}
+
+.table-option-btn {
+    width: 40px
+}
+
+.parchment {
+    width: 100%;
+}
+hr {
+    color: #ccc;
+    width: 90%;
+}
+
 
 .selection-options {
     margin: 20px auto;
@@ -177,10 +197,6 @@ a {
     text-decoration: none;
 }
 
-.content h1 {
-    font-size: 20px;
-
-}
 
 @media (max-width: 768px) {
     .content {

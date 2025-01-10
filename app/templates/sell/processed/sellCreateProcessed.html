@@ -5,7 +5,7 @@
 {% block content %}
 
     <div class="login auth-form-container">
-        <h1> Editar otros </h1>
+        <h1> Crear venta (Cafe Procesado) </h1>
         
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -18,28 +18,24 @@
         {% endwith %}
 
         <form method="POST">
-            {{ inventoryForm.hidden_tag() }}
+            {{ orderDetailForm.hidden_tag() }}
             <div class="input-group">
-                {{ othersInInventoryForm.name.label }}
-                {{ othersInInventoryForm.name }}
+                {{ orderDetailForm.product_id.label }}
+                {{ orderDetailForm.product_id }}
             </div>
             <div class="input-group">
-                {{ inventoryForm.quantity.label }}
-                {{ inventoryForm.quantity }}
+                {{ orderDetailForm.quantity.label }}
+                {{ orderDetailForm.quantity }}
             </div>
             <div class="input-group">
-                {{ othersInInventoryForm.price.label }}
-                {{ othersInInventoryForm.price }}
+                {{ orderForm.order_date.label }}
+                {{ orderForm.order_date }}
             </div>
             <div class="input-group">
-                {{ inventoryForm.entry_date.label }}
-                {{ inventoryForm.entry_date }}
+                {{ orderForm.observation.label }}
+                {{ orderForm.observation }}
             </div>
-            <div class="input-group">
-                {{ inventoryForm.observation.label }}
-                {{ inventoryForm.observation }}
-            </div>
-            {{ inventoryForm.submit }}
+            {{ orderForm.submit }}
         </form>
     </div>
 

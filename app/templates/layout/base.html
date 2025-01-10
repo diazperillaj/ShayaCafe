@@ -19,7 +19,7 @@
             <nav>
                 <ul>
                     <li><a href="{{ url_for('inventoryViews.inventory') }}">Inventario</a></li>
-                    <li><a href="#">Ventas</a></li>
+                    <li><a href="{{ url_for('sell.sells') }}">Ventas</a></li>
                     <li><a href="{{ url_for('farmers.farmer') }}">Caficultores</a></li>
                     <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                 </ul>

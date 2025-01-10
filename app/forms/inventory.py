@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, IntegerField, DateTimeLocalField
+from wtforms import StringField, SubmitField, SelectField, IntegerField, DateTimeLocalField, FloatField
 from wtforms.validators import DataRequired
 import datetime
 
@@ -32,6 +32,8 @@ class dryParchmentCoffeeForm(FlaskForm):
                             validators=[DataRequired()])
     altitude = StringField('Altitud',
                             validators=[DataRequired()])
+    price = FloatField('Precio',
+                            validators=[DataRequired()])
     submit = SubmitField('Agregar',
                             render_kw={"class": "login-btn"})
 
@@ -46,11 +48,15 @@ class processedCoffeeForm(FlaskForm):
                             validators=[DataRequired()])
     responsible = StringField('Responsable',
                             validators=[DataRequired()])
+    price = FloatField('Precio individual',
+                            validators=[DataRequired()])
     submit = SubmitField('Agregar',
                             render_kw={"class": "login-btn"})
 
 class othersInInventoryForm(FlaskForm):
     name = StringField('Nombre',validators=[DataRequired()])
     description = StringField('Descripcion')
+    price = FloatField('Precio',
+                            validators=[DataRequired()])
     submit = SubmitField('Agregar',
                             render_kw={"class": "login-btn"})

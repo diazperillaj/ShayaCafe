@@ -1,0 +1,259 @@
+{% extends "layout/base.html" %}
+
+{% block title %} Inventory {% endblock title %}
+
+{% block content %}
+
+<section class="main_content">
+    <div class="content">
+        <div class="selection-options">
+            <a href="{{ url_for('sell.create_sell_processed_coffee') }}" class="add-inv-btn login-btn">Cafe
+                procesado</a>
+            <a href="{{ url_for('sell.create_sell_other') }}" class="add-inv-btn login-btn">Otros</a>
+            <a href="{{ url_for('sell.create_sell_product') }}" class="add-inv-btn login-btn">Productos</a>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+        <div class="alert-container">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}"> {{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <h1> VENTAS PROCESADO </h1>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th># Venta</th>
+                        <th>ID Pergamino</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Precio Total</th>
+                        <th>Fecha</th>
+                        <th>Observaciones</th>
+                        <th class="table-option-btn">Edit</th>
+                        <th class="table-option-btn">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    {% for order_detail in order.order_details %}
+                    {% if order_detail.category_id == 2 %}
+                    <tr>
+                        {% for process in processed %}
+                        {% if process.id == order_detail.product_id %}
+                        <td>{{ order.id }}</td>
+                        <td>{{ process.dry_parchment_coffee_id }}</td>
+                        <td>{{ process.price }}</td>
+                        <td>{{ order_detail.quantity }}</td>
+                        <td>{{ order.sub_total }}</td>
+                        <td>{{ order.order_date }}</td>
+                        {% if order.observation == ' '%}
+                            <td>{{ order.observation }}</td>
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                        <td>
+                            <form method="GET"
+                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = 1) }}">
+                                <button type="submit" class="btn btn-primary">Editar</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST"
+                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = 1) }}"
+                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                <button type="submit" class="btn btn-primary">Eliminar</button>
+                            </form>
+                        </td>
+                        {% endif %}
+
+                        {% endfor %}
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+    
+    
+    
+    <div class="content">
+        <h1> VENTAS OTROS </h1>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Precio total</th>
+                        <th>Fecha</th>
+                        <th>Observacion</th>
+                        <th class="table-option-btn">Edit</th>
+                        <th class="table-option-btn">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    {% for order_detail in order.order_details %}
+                    {% if order_detail.category_id == 3 %}
+                    <tr>
+                        {% for other in others %}
+                        {% if other.id == order_detail.product_id %}
+                        <td>{{ order.id }}</td>
+                        <td>{{ other.name }}</td>
+                        <td>{{ other.price }}</td>
+                        <td>{{ order_detail.quantity }}</td>
+                        <td>{{ order.sub_total }}</td>
+                        <td>{{ order.order_date }}</td>
+                        {% if order.observation == ' '%}
+                            <td>{{ order.observation }}</td>
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                        <td>
+                            <form method="GET"
+                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = 1) }}">
+                                <button type="submit" class="btn btn-primary">Editar</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST"
+                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = 1) }}"
+                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                <button type="submit" class="btn btn-primary">Eliminar</button>
+                            </form>
+                        </td>
+                        {% endif %}
+
+                        {% endfor %}
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+
+                    {% endfor %}
+                </tbody>            
+            </table>
+        </div>
+    </div>
+    <hr>
+
+
+    <div class="content">
+        <h1> VENTAS PRODUCTOS </h1>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Precio total</th>
+                        <th>Fecha</th>
+                        <th>Observacion</th>
+                        <th class="table-option-btn">Edit</th>
+                        <th class="table-option-btn">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    {% for order_detail in order.order_details %}
+                    {% if order_detail.category_id == 4 %}
+                    <tr>
+                        {% for product in products %}
+                        {% if product.id == order_detail.product_id %}
+                        <td>{{ order.id }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ order_detail.quantity }}</td>
+                        <td>{{ order.sub_total }}</td>
+                        <td>{{ order.order_date }}</td>
+                        {% if order.observation == ''%}
+                            <td>{{ order.observation }}</td>
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                        <td>
+                            <form method="GET"
+                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = 1) }}">
+                                <button type="submit" class="btn btn-primary">Editar</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST"
+                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = 1) }}"
+                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                <button type="submit" class="btn btn-primary">Eliminar</button>
+                            </form>
+                        </td>
+                        {% endif %}
+
+                        {% endfor %}
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+
+                    {% endfor %}
+                </tbody>            
+            </table>
+        </div>
+    </div>
+
+
+    <hr>
+
+    <div class="content">
+        <h1> PRODUCTOS RAPIDOS </h1>
+        <div class="selection-options">
+            <a href="{{ url_for('sell.create_product') }}" class="add-inv-btn login-btn">Agregar productos</a>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th class="table-option-btn">Edit</th>
+                        <th class="table-option-btn">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>
+                            <form method="GET"
+                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = product.id) }}">
+                                <button type="submit" class="btn btn-primary">Editar</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST"
+                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = product.id) }}"
+                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                <button type="submit" class="btn btn-primary">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</section>
+
+{% endblock content %}
