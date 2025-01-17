@@ -16,6 +16,10 @@ header {
     overflow: hidden;
 }
 
+.empty_row{
+    display: none;
+}
+
 header .logo {
     font-size: 25px;
     font-weight: bold;

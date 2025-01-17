@@ -8,4 +8,4 @@ class farmerForm(FlaskForm):
     farm_name = StringField('Finca', validators=[DataRequired(), Length(min=2, max=120)])
     phone = StringField('Telefono', validators=[DataRequired(), Length(min=2, max=20)])
     observation = StringField('Observaciones')
-    submit = SubmitField('Crear', render_kw={"class": "login-btn"})
+    submit = SubmitField('Agregar', render_kw={"class": "login-btn"})

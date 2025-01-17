@@ -21,69 +21,200 @@
         </div>
         {% endif %}
         {% endwith %}
+
+        <style>
+            .modal {
+                display: none;  /* Oculto por defecto */
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro */
+            }
+
+            /* Contenido del modal */
+            .modal-content {
+                text-align: center;
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 300px;
+                border-radius: 10px;
+                
+                display: flex;
+                flex-direction: column;
+            }
+
+            .modal-content input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .modal-content button {
+                width: 100%;
+            }
+
+            /* El botón de cerrar (X) */
+            .close {
+                color: #aaa;
+                font-size: 28px;
+                font-weight: bold;
+                position: absolute;
+                top: 10px;
+                right: 25px;
+            }
+
+            /* Cuando el cursor está sobre el botón de cerrar */
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        </style>
+
+        <div id="filter-by-date-processed-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Inicio</h2>
+                <input id="start-date" type="date" value="2025-01-13">
+                <h2>Fin</h2>
+                <input id="end-date" type="date" value="2025-01-15">
+                <button id="filter-processed-btn">Filtrar</button>    
+            </div>
+        </div>
+
+        {% if orders_processed %}
         <h1> VENTAS PROCESADO </h1>
+        <button id="processed-filter-date-modal" onclick="">Filtrar ventas</button>
         <div class="table-container">
             <table>
                 <thead>
-                    <tr>
+                    <tr class="table_header">
                         <th># Venta</th>
-                        <th>ID Pergamino</th>
+                        <th>Lote</th>
+                        <th>Lote P</th>
+                        <th>Caficultor</th>
+                        <th>Categoria</th>
+                        <th>Peso</th>
                         <th>Precio</th>
                         <th>Cantidad</th>
                         <th>Precio Total</th>
                         <th>Fecha</th>
                         <th>Observaciones</th>
-                        <th class="table-option-btn">Edit</th>
                         <th class="table-option-btn">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for order in orders %}
-                    {% for order_detail in order.order_details %}
-                    {% if order_detail.category_id == 2 %}
-                    <tr>
-                        {% for process in processed %}
-                        {% if process.id == order_detail.product_id %}
-                        <td>{{ order.id }}</td>
-                        <td>{{ process.dry_parchment_coffee_id }}</td>
-                        <td>{{ process.price }}</td>
-                        <td>{{ order_detail.quantity }}</td>
-                        <td>{{ order.sub_total }}</td>
-                        <td>{{ order.order_date }}</td>
-                        {% if order.observation == ' '%}
-                            <td>{{ order.observation }}</td>
-                        {% else %}
+
+                    
+                    {% for order_processed in orders_processed %}
+                        <tr class="table_row">
+                            <td>{{ order_processed.id }}</td>
+                            <td>
+                                <a href="{{ url_for('inventoryViews.inventory')+'#processed_coffee_id_'+order_processed.processed_id|string }}'">{{ order_processed.processed_id }}</a>
+                            </td>
+                            <td>{{ order_processed.parchment_id }}</td>
+                            <td>{{ order_processed.farmer_name }}</td>
+                            <td>{{ order_processed.category }}</td>
+                            <td>{{ order_processed.weight }}</td>
+                            <td>{{ order_processed.price }}</td>
+                            <td>{{ order_processed.quantity }}</td>
+                            <td>{{ order_processed.sub_total }}</td>
+                            <td>{{ order_processed.date }}</td>
+                            {% if order_processed.observation == ' '%}
+                            <td>{{ order_processed.observation }}</td>
+                            {% else %}
                             <td>-</td>
-                        {% endif %}
-                        <td>
-                            <form method="GET"
-                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = 1) }}">
-                                <button type="submit" class="btn btn-primary">Editar</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="POST"
-                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = 1) }}"
-                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
-                                <button type="submit" class="btn btn-primary">Eliminar</button>
-                            </form>
-                        </td>
-                        {% endif %}
-
-                        {% endfor %}
-                        {% endif %}
-                        {% endfor %}
-                    </tr>
-
+                            {% endif %}
+                            <td>
+                                <form method="POST"
+                                    action="{{ url_for('sell.delete_sell_processed', id = order_processed.id) }}"
+                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                    <button type="submit" class="btn btn-primary">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+        {% endif %}
     </div>
+
+    <button id="miBoton">Mi boton</button>
+    <p id="miParrafo">Hola</p>
+
+    <script>
+
+        var trs = document.getElementsByClassName('table_header')
+
+        Array.from(trs).forEach(tr => {
+            th = tr.children[i]
+        })
+
+        var button = document.getElementById('processed-filter-date-modal')
+        var modal = document.getElementById('filter-by-date-processed-modal')
+        var span = document.getElementsByClassName('close')[0];
+        var filter_btn = document.getElementById('filter-processed-btn')
+
+        button.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        filter_btn.onclick = (e) => {
+            if (document.getElementById('start-date').value == '' || document.getElementById('end-date').value == '') {
+                alert('Por favor, selecciona una fecha de inicio y una fecha de finalización.')
+            } else {
+                trs = document.getElementsByClassName('table_row')
+                start = new Date(document.getElementById('start-date').value)
+                end = new Date(document.getElementById('end-date').value)
+
+                count = 0;
+
+                Array.from(trs).forEach(tr => {
+                    const dateString = tr.children[9].textContent.trim();
+                    const orderDate = new Date(dateString);
+
+                    if (orderDate >= start && orderDate <= end) {
+                        tr.style.display = '';
+                        count++;
+                    } else {
+                        tr.style.display = 'none';
+                    }
+                    modal.style.display = "none";
+                })
+
+                if (count == 0) {
+                    alert('No se encontraron ventas en el rango de fechas seleccionado.')
+
+                } else {
+                    alert(`Se encontraron ${count} ventas en el rango de fechas seleccionado.`)
+                }
+            }
+        }
+
+    
+    </script>
+
+
+
+
+    {% if orders_others %}
     <hr>
-    
-    
-    
     <div class="content">
         <h1> VENTAS OTROS </h1>
         <div class="table-container">
@@ -97,56 +228,39 @@
                         <th>Precio total</th>
                         <th>Fecha</th>
                         <th>Observacion</th>
-                        <th class="table-option-btn">Edit</th>
                         <th class="table-option-btn">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for order in orders %}
-                    {% for order_detail in order.order_details %}
-                    {% if order_detail.category_id == 3 %}
-                    <tr>
-                        {% for other in others %}
-                        {% if other.id == order_detail.product_id %}
-                        <td>{{ order.id }}</td>
-                        <td>{{ other.name }}</td>
-                        <td>{{ other.price }}</td>
-                        <td>{{ order_detail.quantity }}</td>
-                        <td>{{ order.sub_total }}</td>
-                        <td>{{ order.order_date }}</td>
-                        {% if order.observation == ' '%}
-                            <td>{{ order.observation }}</td>
-                        {% else %}
+                    {% for order_other in orders_others %}
+                        <tr>
+                            <td>{{ order_other.id }}</td>
+                            <td>{{ order_other.name }}</td>
+                            <td>{{ order_other.price }}</td>
+                            <td>{{ order_other.quantity }}</td>
+                            <td>{{ order_other.sub_total }}</td>
+                            <td>{{ order_other.date }}</td>
+                            {% if order_other.observation == ' '%}
+                            <td>{{ order_other.observation }}</td>
+                            {% else %}
                             <td>-</td>
-                        {% endif %}
-                        <td>
-                            <form method="GET"
-                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = 1) }}">
-                                <button type="submit" class="btn btn-primary">Editar</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="POST"
-                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = 1) }}"
-                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
-                                <button type="submit" class="btn btn-primary">Eliminar</button>
-                            </form>
-                        </td>
-                        {% endif %}
-
-                        {% endfor %}
-                        {% endif %}
-                        {% endfor %}
-                    </tr>
-
+                            {% endif %}
+                            <td>
+                                <form method="POST"
+                                    action="{{ url_for('sell.delete_sell_other', id = order_other.id) }}"
+                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                    <button type="submit" class="btn btn-primary">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
                     {% endfor %}
-                </tbody>            
+                </tbody>
             </table>
         </div>
     </div>
+    {% endif %}
+    {% if orders_products %}
     <hr>
-
-
     <div class="content">
         <h1> VENTAS PRODUCTOS </h1>
         <div class="table-container">
@@ -160,67 +274,51 @@
                         <th>Precio total</th>
                         <th>Fecha</th>
                         <th>Observacion</th>
-                        <th class="table-option-btn">Edit</th>
                         <th class="table-option-btn">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for order in orders %}
-                    {% for order_detail in order.order_details %}
-                    {% if order_detail.category_id == 4 %}
-                    <tr>
-                        {% for product in products %}
-                        {% if product.id == order_detail.product_id %}
-                        <td>{{ order.id }}</td>
-                        <td>{{ product.name }}</td>
-                        <td>{{ product.price }}</td>
-                        <td>{{ order_detail.quantity }}</td>
-                        <td>{{ order.sub_total }}</td>
-                        <td>{{ order.order_date }}</td>
-                        {% if order.observation == ''%}
-                            <td>{{ order.observation }}</td>
-                        {% else %}
+                    {% for order_product in orders_products %}
+                        <tr>
+                            <td>{{ order_product.id }}</td>
+                            <td>{{ order_product.name }}</td>
+                            <td>{{ order_product.price }}</td>
+                            <td>{{ order_product.quantity }}</td>
+                            <td>{{ order_product.sub_total }}</td>
+                            <td>{{ order_product.date }}</td>
+                            {% if order_product.observation == ' '%}
+                            <td>{{ order_product.observation }}</td>
+                            {% else %}
                             <td>-</td>
-                        {% endif %}
-                        <td>
-                            <form method="GET"
-                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = 1) }}">
-                                <button type="submit" class="btn btn-primary">Editar</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="POST"
-                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = 1) }}"
-                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
-                                <button type="submit" class="btn btn-primary">Eliminar</button>
-                            </form>
-                        </td>
-                        {% endif %}
-
-                        {% endfor %}
-                        {% endif %}
-                        {% endfor %}
-                    </tr>
-
+                            {% endif %}
+                            <td>
+                                <form method="POST"
+                                    action="{{ url_for('sell.delete_sell_product', id = order_product.id) }}"
+                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                    <button type="submit" class="btn btn-primary">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
                     {% endfor %}
-                </tbody>            
+                </tbody>
             </table>
         </div>
     </div>
-
-
+    {% endif %}
+    
+    {% if products %}
     <hr>
-
     <div class="content">
         <h1> PRODUCTOS RAPIDOS </h1>
         <div class="selection-options">
             <a href="{{ url_for('sell.create_product') }}" class="add-inv-btn login-btn">Agregar productos</a>
         </div>
+
+        
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Nombre</th>
                         <th>Precio</th>
                         <th class="table-option-btn">Edit</th>
@@ -230,18 +328,17 @@
                 <tbody>
                     {% for product in products %}
                     <tr>
-                        <td>{{ product.id }}</td>
                         <td>{{ product.name }}</td>
                         <td>{{ product.price }}</td>
                         <td>
                             <form method="GET"
-                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = product.id) }}">
+                                action="{{ url_for('sell.delete_product', id = product.id) }}">
                                 <button type="submit" class="btn btn-primary">Editar</button>
                             </form>
                         </td>
                         <td>
                             <form method="POST"
-                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = product.id) }}"
+                                action="{{ url_for('sell.delete_product', id = product.id) }}"
                                 onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
                                 <button type="submit" class="btn btn-primary">Eliminar</button>
                             </form>
@@ -252,8 +349,10 @@
             </table>
         </div>
     </div>
-
-
+    {% endif %}
+<a href="{{ url_for('sell.auto_sells', amount = 10) }}">Auto</a>
 </section>
+
+
 
 {% endblock content %}

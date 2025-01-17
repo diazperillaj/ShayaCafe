@@ -24,7 +24,8 @@
         </div>
         {% endif %}
         {% endwith %}
-        {% if dry_parchment_coffees %}
+        {% if inventories_parchments %}
+        <button id="show-all">Mostrar todo</button>
         <hr class="parchment">
         <div class="table-container">
             <h1> PERGAMINO SECO </h1>
@@ -43,48 +44,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for dry_parchment_coffee in dry_parchment_coffees %}
+                    {% for inventory_parchment in inventories_parchments %}
+                    {% if inventory_parchment.quantity == 0 %}
+                    <tr class="empty_row">
+                        {% else %}
                     <tr>
-                        <td id="dry_parchment_coffee_id_{{ dry_parchment_coffee.id }}"><a
-                                href="#processed_coffee_parchment_id_{{dry_parchment_coffee.id}}">{{
-                                dry_parchment_coffee.id }}</a></td>
-                        <td>{{ dry_parchment_coffee.farmer.name }}</td>
-                        <td>{{ dry_parchment_coffee.variety }}</td>
-                        <td>{{ dry_parchment_coffee.altitude }}</td>
-                        {% for inventory in inventories %}
-
-                        {% if inventory.product_id == dry_parchment_coffee.id and inventory.category_id == 1 %}
-
-                        <td>{{ inventory.quantity }}</td>
-                        <td>{{ inventory.entry_date }}</td>
-                        {% if inventory.observation == '' %}
+                        {% endif %}
+                        <td id="dry_parchment_coffee_id_{{ inventory_parchment.id }}"><a
+                                href="#processed_coffee_parchment_id_{{inventory_parchment.id}}">{{
+                                    inventory_parchment.id }}</a></td>
+                        <td>{{ inventory_parchment.farmer_name }}</td>
+                        <td>{{ inventory_parchment.variety }}</td>
+                        <td>{{ inventory_parchment.altitude }}</td>
+                        <td>{{ inventory_parchment.quantity }}</td>
+                        <td>{{ inventory_parchment.date }}</td>
+                        {% if inventory_parchment.observation == '' %}
                         <td><strong>NA</strong></td>
                         {% else %}
-                        <td>{{ inventory.observation }}</td>
+                        <td>{{ inventory_parchment.observation }}</td>
                         {% endif %}
-                        {% endif %}
-                        {% endfor %}
                         <td>
                             <form method="POST"
-                                action="{{ url_for('inventoryViews.inventory_edit_dry_parchment_coffee', parchment_id=dry_parchment_coffee.id) }}">
+                                action="{{ url_for('inventoryViews.inventory_edit_dry_parchment_coffee', parchment_id=inventory_parchment.id) }}">
                                 <button type="submit" class="btn btn-primary">Editar</button>
                             </form>
                         </td>
                         <td>
                             <form method="POST"
-                                action="{{ url_for('inventoryViews.inventory_delete_dry_parchment_coffee', parchment_id=dry_parchment_coffee.id) }}"
+                                action="{{ url_for('inventoryViews.inventory_delete_dry_parchment_coffee', parchment_id=inventory_parchment.id) }}"
                                 onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
                                 <button type="submit" class="btn btn-primary">Eliminar</button>
                             </form>
                         </td>
                     </tr>
+
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
     {% endif %}
-    {% if processed_coffees %}
+    {% if inventories_processed %}
     <hr>
     <div class="content" id="processed_coffee_table">
         <h1> CAFE PROCESADO </h1>
@@ -94,55 +94,54 @@
                     <tr>
                         <th>ID</th>
                         <th>ID Pergamino</th>
+                        <th>Caficultor</th>
                         <th>Peso Individual</th>
                         <th>Categoria</th>
                         <th>Responsable</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
+                        <th>Pergamino seco</th>
+                        <th>Procesado</th>
+                        <th>Total en Kg</th>
+                        <th>Precio c/u</th>
                         <th>Precio total</th>
                         <th>Fecha entrada</th>
                         <th>Observaciones</th>
-                        <th  class="table-option-btn">Edit</th>
-                        <th  class="table-option-btn">Delete</th>
+                        <th class="table-option-btn">Edit</th>
+                        <th class="table-option-btn">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for processed_coffee in processed_coffees %}
-                    <tr>
-                        <td id="processed_coffee_id_{{ processed_coffee.id }}">{{ processed_coffee.id }}</td>
-                        <td id="processed_coffee_parchment_id_{{processed_coffee.dry_parchment_coffee_id}}">{{
-                            processed_coffee.dry_parchment_coffee_id }}</td>
-                        <td>{{ processed_coffee.weight }}</td>
-                        <td>{{ processed_coffee.processed_category }}</td>
-                        <td>{{ processed_coffee.responsible }}</td>
-
-                        {% for inventory in inventories %}
-
-                        {% if inventory.product_id == processed_coffee.id and inventory.category_id == 2 %}
-
-                        <td>{{ inventory.quantity }}</td>
-                        <td>{{ processed_coffee.price }}</td>
-                        <td>{{ processed_coffee.total_price }}</td>
-                        <td>{{ inventory.entry_date }}</td>
-
-                        {% if inventory.observation == '' %}
-                        <td><strong>NA</strong></td>
+                    {% for inventory_processed in inventories_processed %}
+                    {% if inventory_processed.quantity == 0 %}
+                    <tr class="empty_row">
                         {% else %}
-                        <td>{{ inventory.observation }}</td>
+                    <tr>
                         {% endif %}
-
-                        {% endif %}
-
-                        {% endfor %}
+                        <td id="processed_coffee_id_{{ inventory_processed.id }}">{{ inventory_processed.id }}</td>
+                        <td id="processed_coffee_parchment_id_{{inventory_processed.parchment_id}}">
+                            <a href="#dry_parchment_coffee_id_{{ inventory_processed.parchment_id }}">
+                                {{ inventory_processed.parchment_id }}
+                            </a>
+                        </td>
+                        <td>{{ inventory_processed.farmer_name }}</td>
+                        <td>{{ inventory_processed.weight }}</td>
+                        <td>{{ inventory_processed.category }}</td>
+                        <td>{{ inventory_processed.responsible }}</td>
+                        <td>{{ inventory_processed.parchment_weight }}</td>
+                        <td>{{ inventory_processed.quantity }}</td>
+                        <td>{{ inventory_processed.total_weight }}</td>
+                        <td>{{ inventory_processed.price }}</td>
+                        <td>{{ inventory_processed.total_price }}</td>
+                        <td>{{ inventory_processed.date }}</td>
+                        <td>{{ inventory_processed.observation }}</td>
                         <td>
                             <form method="POST"
-                                action="{{ url_for('inventoryViews.inventory_edit_processed_coffee', processed_id=processed_coffee.id) }}">
+                                action="{{ url_for('inventoryViews.inventory_edit_processed_coffee', processed_id=inventory_processed.id) }}">
                                 <button type="submit" class="btn btn-primary">Editar</button>
                             </form>
                         </td>
                         <td>
                             <form method="POST"
-                                action="{{ url_for('inventoryViews.inventory_delete_processed_coffee', processed_id=processed_coffee.id) }}"
+                                action="{{ url_for('inventoryViews.inventory_delete_processed_coffee', processed_id=inventory_processed.id) }}"
                                 onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
                                 <button type="submit" class="btn btn-primary">Eliminar</button>
                             </form>
@@ -154,7 +153,7 @@
         </div>
     </div>
     {% endif %}
-    {% if others_in_inventories %}
+    {% if inventories_others %}
     <hr>
     <div class="content" id="others_in_inventory_table">
         <h1> OTROS </h1>
@@ -167,41 +166,31 @@
                         <th>Cantidad</th>
                         <th>Fecha entrada</th>
                         <th>Observaciones</th>
-                        <th  class="table-option-btn">Edit</th>
-                        <th  class="table-option-btn">Delete</th>
+                        <th class="table-option-btn">Edit</th>
+                        <th class="table-option-btn">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for others_in_inventory in others_in_inventories %}
-                    <tr>
-                        <td id="others_in_inventory_id_{{ others_in_inventory.id }}">{{ others_in_inventory.id }}</td>
-                        <td>{{ others_in_inventory.name }}</td>
-
-                        {% for inventory in inventories %}
-
-                        {% if inventory.product_id == others_in_inventory.id and inventory.category_id == 3 %}
-
-                        <td>{{ inventory.quantity }}</td>
-                        <td>{{ inventory.entry_date }}</td>
-
-                        {% if inventory.observation == '' %}
-                        <td><strong>NA</strong></td>
-                        {% else %}
-                        <td>{{ inventory.observation }}</td>
-                        {% endif %}
-
-                        {% endif %}
-
-                        {% endfor %}
+                    {% for inventory_other in inventories_others %}
+                    {% if inventory_other.quantity == 0 %}
+                        <tr class="empty_row">
+                    {% else %}
+                        <tr>
+                    {% endif %}
+                        <td id="others_in_inventory_id_{{ inventory_other.id }}">{{ inventory_other.id }}</td>
+                        <td>{{ inventory_other.name }}</td>
+                        <td>{{ inventory_other.quantity }}</td>
+                        <td>{{ inventory_other.date }}</td>
+                        <td>{{ inventory_other.observation }}</td>
                         <td>
                             <form method="GET"
-                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = others_in_inventory.id) }}">
+                                action="{{ url_for('inventoryViews.inventory_edit_others_in_inventory', others_id = inventory_other.id) }}">
                                 <button type="submit" class="btn btn-primary">Editar</button>
                             </form>
                         </td>
                         <td>
                             <form method="POST"
-                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = others_in_inventory.id) }}"
+                                action="{{ url_for('inventoryViews.inventory_delete_others_in_inventory', others_id = inventory_other.id) }}"
                                 onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
                                 <button type="submit" class="btn btn-primary">Eliminar</button>
                             </form>
@@ -230,6 +219,7 @@
                 </thead>
                 <tbody>
                     {% for inventory in inventories %}
+                    {% if inventory.quantity > 0 %}
                     <tr>
                         <td>{{ inventory.category.name }}</td>
                         {% if inventory.category_id == 1 %}
@@ -250,6 +240,7 @@
                         <td>{{ inventory.observation }}</td>
                         {% endif %}
                     </tr>
+                    {% endif %}
                     {% endfor %}
                 </tbody>
             </table>
@@ -257,5 +248,23 @@
     </div>
     {% endif %}
 </section>
+
+<script>
+
+    var button = document.getElementById('show-all');
+    var trs = document.getElementsByClassName('empty_row');
+
+    button.addEventListener('click', function () {
+        Array.from(trs).forEach(tr => {
+            if (tr.style.display == 'none') {
+                tr.style.display = 'table-row';
+            } else {
+                tr.style.display = 'none';
+            }
+        })
+    });
+
+
+</script>
 
 {% endblock content %}

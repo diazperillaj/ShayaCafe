@@ -5,7 +5,7 @@
 {% block content %}
 
     <div class="login auth-form-container">
-        <h1> Vender </h1>
+        <h1> Editar producto </h1>
         
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -18,24 +18,16 @@
         {% endwith %}
 
         <form method="POST">
-            {{ orderDetailForm.hidden_tag() }}
+            {{ productForm.hidden_tag() }}
             <div class="input-group">
-                {{ orderDetailForm.product_id.label }}
-                {{ orderDetailForm.product_id }}
+                {{ productForm.name.label }}
+                {{ productForm.name }}
             </div>
             <div class="input-group">
-                {{ orderDetailForm.quantity.label }}
-                {{ orderDetailForm.quantity }}
+                {{ productForm.price.label }}
+                {{ productForm.price }}
             </div>
-            <div class="input-group">
-                {{ orderForm.order_date.label }}
-                {{ orderForm.order_date }}
-            </div>
-            <div class="input-group">
-                {{ orderForm.observation.label }}
-                {{ orderForm.observation }}
-            </div>
-            {{ orderForm.submit }}
+            {{ productForm.submit }}
         </form>
     </div>
 

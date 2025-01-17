@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from app.forms.inventory import *
 from app.models.inventory import *
 from app.models.farmer import Farmer
+from app.models.tables_inventories import dryParchmentCoffeeTable, processedCoffeeTable,othersInInventoryTable
 
 
 inventoryViews = Blueprint('inventoryViews', __name__)
@@ -10,17 +11,17 @@ inventoryViews = Blueprint('inventoryViews', __name__)
 
 @inventoryViews.route('/')
 def inventory():
-    inv = Inventory.query.all()
 
-    dry_parchment_inv = dryParchmentCoffee.query.all()
-    processed_inv = processedCoffee.query.all()
-    others_inv = othersInInventory.query.all()
+    inventories_parchments = dryParchmentCoffeeTable.return_all_inventories()
+    inventories_processed = processedCoffeeTable.return_all_inventories()
+    inventories_others = othersInInventoryTable.return_all_inventories()
+    inventories = Inventory.query.all()
 
     return render_template('inventory/inventory.html',
-        inventories = inv,
-        dry_parchment_coffees = dry_parchment_inv,
-        processed_coffees = processed_inv,
-        others_in_inventories = others_inv
+        inventories_parchments = inventories_parchments,
+        inventories_processed = inventories_processed,
+        inventories_others = inventories_others,
+        inventories = inventories
     )
 
 
@@ -68,13 +69,8 @@ def inventory_create_dry_parchment_coffee():
             inventoryF.product_id.data = dryParchment.id
 
             if inventoryF.validate_on_submit():
-                inventoryModel = Inventory(
-                    category_id = inventoryF.category_id.data,
-                    product_id = inventoryF.product_id.data,
-                    quantity = inventoryF.quantity.data,
-                    entry_date = inventoryF.entry_date.data,
-                    observation = inventoryF.observation.data,
-                )
+                inventoryModel = Inventory()
+                inventoryF.populate_obj(inventoryModel)
 
                 db.session.add(inventoryModel)
                 db.session.commit()
@@ -154,55 +150,89 @@ def inventory_create_processed_coffee():
     inventoryF = inventoryForm()
     processedCoffeeF = processedCoffeeForm()
 
-    processedCoffeeF.dry_parchment_coffee_id.choices = [ 
-        (dry_parchment_coffee.id,f"ID: {dry_parchment_coffee.id}, Fecha: {Inventory.query.filter_by(product_id=dry_parchment_coffee.id).first().entry_date}, Caficultor: {dry_parchment_coffee.farmer.name}")
-        for dry_parchment_coffee in dryParchmentCoffee.query.all()]
+    """
+        'dryParch' get all the dry parchment coffees and is used to create the 'dry_parchment_coffee_id' choices\
+        and validate if there are dry parchment coffees
+    """
 
-    if not dryParchmentCoffee.query.all():
+    dryParch = dryParchmentCoffee.query.all()
+
+    processedCoffeeF.dry_parchment_coffee_id.choices = [ 
+        (dry_parchment_coffee.id,f"ID: {dry_parchment_coffee.id}, {inventory.quantity} Kg, Fecha: {inventory.entry_date}, Caficultor: {dry_parchment_coffee.farmer.name}")
+        for dry_parchment_coffee in dryParch
+            for inventory in Inventory.query.filter_by(product_id=dry_parchment_coffee.id, category_id=1).all()
+                if inventory.quantity > 0]
+
+    if processedCoffeeF.dry_parchment_coffee_id.choices == []:
         flash('Se debe agregar pergamino seco antes de registrar un cafe procesado', 'error')
         return redirect(url_for('inventoryViews.inventory'))
 
     if processedCoffeeF.validate_on_submit():
-        print('Entra')
         try:
-            processedModel = processedCoffee(
-                dry_parchment_coffee_id = processedCoffeeF.dry_parchment_coffee_id.data,
-                weight = processedCoffeeF.weight.data,
-                processed_category = processedCoffeeF.processed_category.data.capitalize(),
-                responsible = processedCoffeeF.responsible.data.capitalize(),
-                price = processedCoffeeF.price.data,
-                total_price = processedCoffeeF.price.data * inventoryF.quantity.data
-            )
+
+            """
+                Converting the form to object, and added the processed category and responsible capitalized.
+            """
+
+            processedModel = processedCoffee()
+            processedCoffeeF.populate_obj(processedModel)
+
+            processedModel.processed_category = processedModel.processed_category.capitalize(),
+            processedModel.responsible = processedModel.responsible.title(),
+
+            """
+                Getting the total price of the processed coffee
+            """
+            processedModel.total_price = processedCoffeeF.price.data * inventoryF.quantity.data
+
+            inventoryParchmentToModify = Inventory.query.filter_by(product_id=processedModel.dry_parchment_coffee_id, category_id=1).first()
+            parchment = dryParchmentCoffee.query.get(processedModel.dry_parchment_coffee_id)
+
+
+            if inventoryParchmentToModify.quantity < processedModel.processed_parchment_weight:
+                flash('No hay suficiente inventario', 'error')
+                return redirect(url_for('inventoryViews.inventory_create_processed_coffee'))
+
+            inventoryParchmentToModify.quantity = inventoryParchmentToModify.quantity - processedModel.processed_parchment_weight
+
+            parchment.processed = True if inventoryParchmentToModify.quantity == 0 else False
 
             db.session.add(processedModel)
             db.session.commit()
+
+            """
+                The inventoryForm set the category_id to 2 (Processed Coffee) and the product_id
+                is the same as the processedModel.id (From table processed_coffees.id)
+
+                If this 2 lines are deleted, it will not be possible to add processed coffees because
+                the form detects the category_id and the product_id are empty because it has not
+                this fields in the form
+            """
 
             inventoryF.category_id.data = 2
             inventoryF.product_id.data = processedModel.id
 
             if inventoryF.validate_on_submit():
 
-                inventoryModel = Inventory(
-                    category_id = inventoryF.category_id.data,
-                    product_id = inventoryF.product_id.data,
-                    quantity = inventoryF.quantity.data,
-                    entry_date = inventoryF.entry_date.data,
-                    observation = inventoryF.observation.data,
-                )
+                inventoryModel = Inventory()
+                inventoryF.populate_obj(inventoryModel)
 
                 db.session.add(inventoryModel)
                 db.session.commit()
 
+                flash('Se ha agregado correctamente', 'completed')
+                print('ye')
                 return redirect(url_for('inventoryViews.inventory'))
 
         except Exception as e:
             flash('No se ha podido completar', 'error')
             print(e)
+            return redirect(url_for('inventoryViews.inventory_create_processed_coffee'))
         
 
     return render_template('inventory/processed/inventoryCreateProcessedCoffee.html',
         inventoryForm=inventoryF,
-        processedCoffeeForm=processedCoffeeF, temp=inventory)
+        processedCoffeeForm=processedCoffeeF)
 
 
 @inventoryViews.route('/edit/processed-coffee/<int:processed_id>', methods=['GET', 'POST'])
@@ -250,6 +280,10 @@ def inventory_delete_processed_coffee(processed_id: int):
         return redirect(url_for('inventoryViews.inventory'))
 
     try:
+
+        inventoryParchmentToModify = Inventory.query.filter_by(product_id=processed.dry_parchment_coffee_id, category_id=1).first()
+        inventoryParchmentToModify.quantity = inventoryParchmentToModify.quantity + processed.processed_parchment_weight
+
         db.session.delete(processed)
         db.session.delete(inve)
         db.session.commit()
@@ -282,13 +316,8 @@ def inventory_create_others_in_inventory():
 
             if inventoryF.validate_on_submit():
 
-                inventoryModel = Inventory(
-                    category_id = inventoryF.category_id.data,
-                    product_id = inventoryF.product_id.data,
-                    quantity = inventoryF.quantity.data,
-                    entry_date = inventoryF.entry_date.data,
-                    observation = inventoryF.observation.data,
-                )
+                inventoryModel = Inventory()
+                inventoryF.populate_obj(inventoryModel)
 
                 db.session.add(inventoryModel)
                 db.session.commit()
@@ -348,3 +377,5 @@ def inventory_delete_others_in_inventory(others_id: int):
         flash('Error','error')
 
     return redirect(url_for('inventoryViews.inventory'))
+
+

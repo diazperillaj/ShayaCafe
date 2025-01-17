@@ -23,6 +23,7 @@ class orderDetail(db.Model):
     product_id = db.Column(db.Integer, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
+    unit_price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
     # Relationship with Order (many to one)

@@ -6,7 +6,7 @@ import datetime
 class inventoryForm(FlaskForm):
     product_id = IntegerField('Product ID')
     category_id = IntegerField('Category ID')
-    quantity = IntegerField('Cantidad',
+    quantity = FloatField('Cantidad',
                             validators=[DataRequired()])
     entry_date = DateTimeLocalField('Fecha ingreso',
                             format='%Y-%m-%dT%H:%M',
@@ -38,11 +38,13 @@ class dryParchmentCoffeeForm(FlaskForm):
                             render_kw={"class": "login-btn"})
 
 class processedCoffeeForm(FlaskForm):
-    dry_parchment_coffee_id = SelectField('Pergamino seco',
+    dry_parchment_coffee_id = SelectField('Pergamino seco a procesar',
                             choices=[],
                             coerce=int,
                             validators=[DataRequired()])
-    weight = IntegerField('Tamaño individual',
+    weight = FloatField('Peso de bolsa',
+                            validators=[DataRequired()])
+    processed_parchment_weight = FloatField('Peso total de pergamino procesado',
                             validators=[DataRequired()])
     processed_category = StringField('Tipo molienda',
                             validators=[DataRequired()])

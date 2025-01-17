@@ -25,3 +25,7 @@ thead {
 tr:nth-child(2n) {
     background-color: #ebebeb;
 }
+
+td:nth-child(2n) {
+    font-weight: bold;
+}

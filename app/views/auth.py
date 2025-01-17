@@ -17,9 +17,10 @@ def login_page():
 @auth.route('/', methods=['GET', 'POST'])
 def login():
 
-    userTemp = User.query.filter_by(username='Juan').first()
-    login_user(userTemp)
+    tempU = User.query.filter_by(username='Juan').first()
+    login_user(tempU)
     return redirect(url_for('index.home'))
+
 
     form = loginForm()
     if form.validate_on_submit():

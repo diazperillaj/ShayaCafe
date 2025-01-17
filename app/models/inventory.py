@@ -99,6 +99,7 @@ class processedCoffee(db.Model):
     dry_parchment_coffee_id = db.Column(db.Integer, db.ForeignKey('dry_parchment_coffees.id', ondelete='SET DEFAULT'), nullable=False, default=0)
     weight = db.Column(db.Float, nullable=False)
     processed_category = db.Column(db.String(120), nullable=False)
+    processed_parchment_weight = db.Column(db.Float, nullable=False)
     responsible = db.Column(db.String(120), nullable=False)
     price = db.Column(db.Float, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
